@@ -1,7 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-/*On initialise la taille du tableau qui recevra la dernière ligne du fichier texte*/
 #define MAXCHAR 1000
 
 void Write(int nombre)
@@ -22,23 +21,25 @@ void Write(int nombre)
 char *Read_Last()
 {
      FILE * fp;
-     /*On initialise le tableau, puis on alloue l'espace nécessaire*/
      char *str;
-    /*Attention, en C on peut pas juste retourner un tableau, on a besoin de cette ligne*/
     str = (char*)malloc(sizeof(char)*MAXCHAR);
 
     /*Ouvrir le fichier*/
     fp = fopen("C:\\Users\\marjo\\OneDrive - De Vinci\\Documents\\ESILV\\Cours\\S5\\Structures_Données_Algo\\Projet_C\\bin\\Debug\\FichierResult.txt","r");
 
-   /*Fonction qui retourne dans str la dernière ligne de fp*/
-    fgets(str, MAXCHAR,fp);
+    /*Ici, on veut la denrière ligne donc tant que ce n'est pas null, on parcourt la ligne suivante*/
+    while(fgets(str, MAXCHAR,fp)!=NULL)
+    {
+      fgets(str, MAXCHAR,fp);
+    }
 
     fclose(fp);
 
     return  str;
 }
 
-long Syracuse(long n)
+/*On teste deux méthodes qui retournent 0 ou 1 (vrai ou faux)*/
+int Syracuse(long n)
 {
     while(n !=1)
     {
@@ -46,38 +47,41 @@ long Syracuse(long n)
 
         else  n = 3*n +1;
 
-        printf("%d\n", n);
     }
 
     return n;
 
 }
 
-long SyracuseRecurcif(long n)
+int SyracuseRecurcif(long n)
 {
   if(n==1) return 1;
 
-  if(n%2==0) return Syracuse2(n/2);
-  else return Syracuse2(3*n+1);
+  if(n%2==0) return SyracuseRecurcif(n/2);
+  else return SyracuseRecurcif(3*n+1);
 
 }
-
 
 int main()
 {
-
+   
    Write(13);
    Write(14);
-   Write(15);
-   char  *last = Read_Last() ;
+   /*Write(15);
+   char  *last  =Read_Last() ;
    printf("%s", last);
-  /*On ne doit pas oublier de libérer l'espace mémoire après l'avoir utilisé*/
+   free(last); */
+
+   long a_test = 250;
+   int n = Syracuse(a_test);
+    /*Si le nombre vérifie l'hypothèse, on l'écrit dans le fichier*/
+   if(n==1)
+   {
+       Write(a_test);
+   }
+   char  *last  =Read_Last() ;
+    /*Ici, on affiche 250*/
+   printf("%s", last);
    free(last);
-    
-    
-   long n = SyracuseRecurcif(25);
-    /*On vérifie le dernier nombre est bien 1*/
-   printf("Syracuse %d", n);
 
 }
-
