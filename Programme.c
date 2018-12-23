@@ -38,6 +38,30 @@ char *Read_Last()
     return  str;
 }
 
+int Syracuse(int n)
+{
+    while(n !=1)
+    {
+        if(n %2 ==0) n = n/2;
+
+        else  n = 3*n +1;
+
+        printf("%d\n", n);
+    }
+
+    return n;
+
+}
+
+int SyracuseRecurcif(int n)
+{
+  if(n==1) return 1;
+
+  if(n%2==0) return Syracuse2(n/2);
+  else return Syracuse2(3*n+1);
+
+}
+
 
 int main()
 {
@@ -49,6 +73,11 @@ int main()
    printf("%s", last);
   /*On ne doit pas oublier de libérer l'espace mémoire après l'avoir utilisé*/
    free(last);
+    
+    
+   int n = SyracuseRecurcif(25);
+    /*On vérifie le dernier nombre est bien 1*/
+   printf("Syracuse %d", n);
 
 }
 
