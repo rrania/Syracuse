@@ -38,7 +38,7 @@ char *Read_Last()
     return  str;
 }
 
-int Syracuse(int n)
+long Syracuse(long n)
 {
     while(n !=1)
     {
@@ -53,7 +53,7 @@ int Syracuse(int n)
 
 }
 
-int SyracuseRecurcif(int n)
+long SyracuseRecurcif(long n)
 {
   if(n==1) return 1;
 
@@ -75,7 +75,7 @@ int main()
    free(last);
     
     
-   int n = SyracuseRecurcif(25);
+   long n = SyracuseRecurcif(25);
     /*On vérifie le dernier nombre est bien 1*/
    printf("Syracuse %d", n);
 
