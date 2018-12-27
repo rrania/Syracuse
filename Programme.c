@@ -1,16 +1,21 @@
 #include <stdio.h>
+#include <stdlib.h>
 
-#define tailleTableau 6
+
+/*On définit une taille pour le tableau à retourner dans la méthode Read_Last()*/
 #define MAXCHAR 1000
 
+/*On crée une méthode qui va écrire dans un fichier le nombre qui vérifie la suite de Syracuse*/
+/*Il prend en méthode un nombre à écrire dans le fichier*/
 void Write(int nombre)
 {
+    /*On définit le fichier*/
     FILE * fp;
 
-    /*Ouvrir le fichier, le a+ permet de lire et écrire à partir de la fin du fichier*/
+    /*On ouvre le fichier, le a+ permet de lire et écrire à partir de la fin du fichier*/
     fp = fopen("C:\\Users\\marjo\\OneDrive - De Vinci\\Documents\\ESILV\\Cours\\S5\\Structures_Données_Algo\\Projet_C\\bin\\Debug\\FichierResult.txt","a+");
 
-    /*Ecrire dans le fichier*/
+    /*On écrit dans le fichier : on précise le fichier dans lequel on écrit puis ce qu'on écrit*/
     fprintf(fp,"%d\n", nombre);
 
     /*Puis on ferme le fichier*/
@@ -18,49 +23,65 @@ void Write(int nombre)
 
 }
 
+/*On crée une méthode qui retourne le dernier nombre du fichier contenant les nombres vérifiant Syracuse*/
 char *Read_Last()
 {
+    /*On définit le fichier*/
      FILE * fp;
+     
+     /*On définit de manière dynamique le tableau de caractères - les string n'existent pas - à retourner à la fin de la méthode*/
      char *str;
+     
+     /*On alloue l'espace nécessaire au tableau*/
     str = (char*)malloc(sizeof(char)*MAXCHAR);
 
-    /*Ouvrir le fichier*/
+    /*On ouvre le fichier, le "r" pour "read" sert à uniquement lire dans le fichier*/
     fp = fopen("C:\\Users\\marjo\\OneDrive - De Vinci\\Documents\\ESILV\\Cours\\S5\\Structures_Données_Algo\\Projet_C\\bin\\Debug\\FichierResult.txt","r");
 
-    /*Ici, on veut la denrière ligne donc tant que ce n'est pas null, on parcourt la ligne suivante*/
+    /*On fait cette boucle pour parcourir le fichier jusqu'à la dernière ligne, soit ce que l'on veut retourner*/
     while(fgets(str, MAXCHAR,fp)!=NULL)
     {
+    /*On dit que str prend la valeur de la ligne du fichier fp*/
       fgets(str, MAXCHAR,fp);
     }
 
+    /*On oublie pas de fermer le fichier avant de retourner le tableau contenant le dernier élément de fp*/
     fclose(fp);
 
     return  str;
 }
 
-/*On teste deux méthodes qui retournent 0 ou 1 (vrai ou faux)*/
+/*1ere méthode Syracuse 'Classique' prenant un long en argument car logn a une plage de valeurs plus grande que int*/
 int Syracuse(long n)
 {
+    /*Tant que le nombre n'est pas 1, on continue les opérations*/
     while(n !=1)
     {
+        /*Si le nombre est pair, alors on le divise par 2*/
         if(n %2 ==0) n = n/2;
 
+        /*Sinon, on le multiplie par 3 et on ajoute 1*/
         else  n = 3*n +1;
 
     }
 
+    /*On retourne n, le nombre en argument, =1 si ça vérifie Syracuse*/
     return n;
 
 }
 
+/*2e méthode : Récurcive qui prend en argument le même long que dans la 1ere méthode*/
 int SyracuseRecurcif(long n)
 {
+    /*Si le nombre est 1 on retourne 1 ça vérifie Syracuse*/
   if(n==1) return 1;
 
+  /*Sinon, on retourne la même méthode avec en argument le nombre divisé par deux s'il est pair, ou le nombre x3+1 s'il est impair*/
   if(n%2==0) return SyracuseRecurcif(n/2);
   else return SyracuseRecurcif(3*n+1);
 
 }
+
 
 //partie 2 avec le tableau de caractères
 
