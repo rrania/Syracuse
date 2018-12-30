@@ -267,7 +267,7 @@ int main()
 
     /*
     //exemple 2 avec tailleTableau = 20
-    //Le tableau est rempli de la valeur max des long en base 16
+    //Le tableau est rempli de la valeur max des long -1 /3 en base 16
     char tab[tailleTableau+1];
     for (int i=0; i<tailleTableau+1;i++){
         tab[i]='0';
@@ -299,11 +299,11 @@ int main()
         copierTab(tab2,tab);
         Write_Char(tab);
         if ( !unTour(tab)){
-            printf("retenu differente de 0 donc on s'arrete puisqu'on  plus d'espace dans le tableau");
-            return 1;
+            printf("retenu differente de 0 donc on s'arrete puisqu'on n'a plus d'espace dans le tableau");
+            return 0;
         }
         ajout1(tab2);
     }
-    return 0;
+    return 1;
 
 }
