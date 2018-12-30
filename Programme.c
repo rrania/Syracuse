@@ -1,19 +1,23 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-
-/*On définit une taille pour le tableau à retourner dans la méthode Read_Last()*/
-#define MAXCHAR 1000
+//on définit la taille du tableau ou on stocke le nombre en hexadecimal
+//exemple 1
+#define tailleTableau 3
+/*
+//exemple 2
+#define tailleTableau 20
+*/
 
 /*On crée une méthode qui va écrire dans un fichier le nombre qui vérifie la suite de Syracuse*/
 /*Il prend en méthode un nombre à écrire dans le fichier*/
-void Write(int nombre)
+void Write(long nombre)
 {
     /*On définit le fichier*/
     FILE * fp;
 
     /*On ouvre le fichier, le a+ permet de lire et écrire à partir de la fin du fichier*/
-    fp = fopen("C:\\Users\\marjo\\OneDrive - De Vinci\\Documents\\ESILV\\Cours\\S5\\Structures_Données_Algo\\Projet_C\\bin\\Debug\\FichierResult.txt","a+");
+    fp = fopen("FichierResult.txt","a+");
 
     /*On écrit dans le fichier : on précise le fichier dans lequel on écrit puis ce qu'on écrit*/
     fprintf(fp,"%d\n", nombre);
@@ -23,62 +27,64 @@ void Write(int nombre)
 
 }
 
-/*On crée une méthode qui retourne le dernier nombre du fichier contenant les nombres vérifiant Syracuse*/
-char *Read_Last()
+void Write_Char(char nombre[])
 {
     /*On définit le fichier*/
-     FILE * fp;
-     
-     /*On définit de manière dynamique le tableau de caractères - les string n'existent pas - à retourner à la fin de la méthode*/
-     char *str;
-     
-     /*On alloue l'espace nécessaire au tableau*/
-    str = (char*)malloc(sizeof(char)*MAXCHAR);
+    FILE * fp;
 
-    /*On ouvre le fichier, le "r" pour "read" sert à uniquement lire dans le fichier*/
-    fp = fopen("C:\\Users\\marjo\\OneDrive - De Vinci\\Documents\\ESILV\\Cours\\S5\\Structures_Données_Algo\\Projet_C\\bin\\Debug\\FichierResult.txt","r");
+    /*On ouvre le fichier, le a+ permet de lire et écrire à partir de la fin du fichier*/
+    fp = fopen("FichierResult.txt","a+");
 
-    /*On fait cette boucle pour parcourir le fichier jusqu'à la dernière ligne, soit ce que l'on veut retourner*/
-    while(fgets(str, MAXCHAR,fp)!=NULL)
-    {
-    /*On dit que str prend la valeur de la ligne du fichier fp*/
-      fgets(str, MAXCHAR,fp);
-    }
+    fprintf(fp,"%s", nombre);
 
-    /*On oublie pas de fermer le fichier avant de retourner le tableau contenant le dernier élément de fp*/
+    fprintf(fp,"\n");
+    /*Puis on ferme le fichier*/
     fclose(fp);
 
-    return  str;
 }
 
 /*1ere méthode Syracuse 'Classique' prenant un long en argument car logn a une plage de valeurs plus grande que int*/
 int Syracuse(long n)
 {
+    long avant_dernier = 0;
+    long dernier = n;
+    long avant_avant_dernier = 0;
+    long calcul = 0;
+
     /*Tant que le nombre n'est pas 1, on continue les opérations*/
-    while(n !=1)
+    while(avant_avant_dernier !=4 || avant_dernier!=2 || dernier !=1)
     {
         /*Si le nombre est pair, alors on le divise par 2*/
-        if(n %2 ==0) n = n/2;
+        if(dernier %2 ==0) calcul = dernier/2;
 
         /*Sinon, on le multiplie par 3 et on ajoute 1*/
-        else  n = 3*n +1;
+        else  calcul = 3*dernier+1;
+
+        avant_avant_dernier = avant_dernier;
+        avant_dernier = dernier;
+        dernier = calcul;
+        printf("%d\n", avant_avant_dernier);
+        printf("%d\n", avant_dernier);
+
+       printf("%d\n", dernier);
 
     }
 
     /*On retourne n, le nombre en argument, =1 si ça vérifie Syracuse*/
-    return n;
+    return dernier;
 
 }
 
 /*2e méthode : Récurcive qui prend en argument le même long que dans la 1ere méthode*/
-int SyracuseRecurcif(long n)
+int SyracuseRecurcif(long avant_avant_dernier, long avant_dernier, long dernier)
 {
+
     /*Si le nombre est 1 on retourne 1 ça vérifie Syracuse*/
-  if(n==1) return 1;
+  if(avant_avant_dernier !=4 || avant_dernier!=2 || dernier !=1) return 1;
 
   /*Sinon, on retourne la même méthode avec en argument le nombre divisé par deux s'il est pair, ou le nombre x3+1 s'il est impair*/
-  if(n%2==0) return SyracuseRecurcif(n/2);
-  else return SyracuseRecurcif(3*n+1);
+  if(dernier%2==0) return SyracuseRecurcif( avant_dernier, dernier, dernier/2);
+  else return SyracuseRecurcif(avant_dernier, dernier, 3*dernier+1);
 
 }
 
@@ -143,12 +149,14 @@ char mult3Char(char c, int* retenu){
 
 //multiple le nombre impair en hexadecimal qui se trouve dans le tableau par 3
 //le resultat de la multiplication par 3 en hexadecimal est stocke directement dans le meme tableau
-void mult3(char tableau[]){
+//return la retenu finale
+int mult3(char tableau[]){
     int i;
     int retenu=0;
     for (i=tailleTableau-1 ; i>=0;i--){
         tableau[i]=mult3Char(tableau[i], &retenu);
     }
+    return retenu;
 }
 //return l'ajout de la retenu au caractere c
 //et on change la valeur de la retenu grace a l'adresse de la retenu
@@ -163,14 +171,15 @@ char ajoutChar(char c , int* retenu){
 
 //l'ajout de un au nombre en hexadecimal qui se trouve dans le tableau
 //le resultat en hexadecimal est stocke directement dans le meme tableau
-
-void ajout1(char tableau[]){
+//return la retenu finale
+int ajout1(char tableau[]){
     int i=tailleTableau-1;
     int retenu=1;
-    while(i>0 && retenu ){
+    while(i>=0 && retenu ){
             tableau[i]=ajoutChar(tableau[i] , &retenu);
             i--;
     }
+    return retenu;
 }
 
 //return 1 si le contenu du tableau est egale au caractere c , 0 sinon
@@ -188,52 +197,111 @@ int est(char tableau[] , char c){
 }
 
 //un tour de Syracuse avec un nombre en Hexadecimal stocke dans le tableau
+//return 1 si l'hypothese est validee pour le tour
+//0 si l'hypothèse n'est pas validee ou on a plus de place dans le tableau pour faire le calcule
 int unTour(char tableau[]){
     int trouve4=0;
     int trouve2=0;
     int trouve1=0;
     while ( !trouve4 || !trouve2 || !trouve1){
         trouve4= est(tableau,'4')?1:trouve4;
-        trouve2= est(tableau,'2')?1:trouve2;
-        trouve1= est(tableau,'1')?1:trouve1;
+        trouve2= (est(tableau,'2') && trouve4) ?1:trouve2 ;
+        trouve1= (est(tableau,'1') && trouve4 && trouve2 )?1:trouve1;
         if (estPair(tableau[tailleTableau-1])){
             div2(tableau);
         } else{
-            mult3(tableau);
-            ajout1(tableau);
+            if (mult3(tableau)){
+                return 0;
+            }
+            if (ajout1(tableau)){
+                return 0;
+            }
         }
+        //printf("%s\n",tableau);
     }
     return 1;
+}
+
+//copier le rableau tab dans le tableau tabCopie
+void copierTab(char tab[] , char tabCopie[]){
+    for (int i=0; i<tailleTableau+1;i++){
+        tabCopie[i]=tab[i];
+    }
 }
 
 
 int main()
 {
-   Write(13);
-   Write(14);
-   /*Write(15);
-   char  *last  =Read_Last() ;
-   printf("%s", last);
-   free(last); */
+    //Partie 1
+    printf("Partie 1 : en cours\n");
+    long i=1;
 
-   long a_test = 250;
-   int n = Syracuse(a_test);
-    /*Si le nombre vérifie l'hypothèse, on l'écrit dans le fichier*/
-   if(n==1)
-   {
-       Write(a_test);
-   }
-   char  *last  =Read_Last() ;
-    /*Ici, on affiche 250*/
-   printf("%s", last);
-   free(last);
-    /*char t[]={'0','0','6','A','9','3','\0'};
-    printf("%s",t);
-    printf("////////////////////");
-    int res=unTour(t);
-    printf("************");
-    printf("%c %c %c %c %c %c",t[0],t[1],t[2],t[3],t[4],t[5]);
-    printf("le res est %d",res);
-    return 0; */
+    //On a pris la valeur du plus grand long puis -1 et /3 : on a testé mais pour tester les 2 boucles, on prend une valeur du
+    //nombre max plus petit
+  /*  while(i<3074457345618258602)
+    {
+        Write(i);
+        SyracuseRecurcif(0,0,i);
+        i++;
+    }
+*/
+
+    while(i<30)
+    {
+        Write(i);
+        SyracuseRecurcif(0,0,i);
+        i++;
+    }
+    printf("Partie 1 : finie\n");
+    //Partie 2
+    printf("Partie 2 : en cours\n");
+
+    //exemple 1 avec tailleTableau = 3
+    char tab[tailleTableau+1];
+    tab[3]='\0';
+    tab[2]='1';
+    tab[1]='0';
+    tab[0]='0';
+
+    /*
+    //exemple 2 avec tailleTableau = 20
+    //Le tableau est rempli de la valeur max des long en base 16
+    char tab[tailleTableau+1];
+    for (int i=0; i<tailleTableau+1;i++){
+        tab[i]='0';
+    }
+    tab[tailleTableau]='\0';
+    tab[tailleTableau-1]='0';
+    tab[tailleTableau-2]='0';
+    tab[tailleTableau-3]='A';
+    tab[tailleTableau-4]='A';
+    tab[tailleTableau-5]='A';
+    tab[tailleTableau-6]='A';
+    tab[tailleTableau-7]='A';
+    tab[tailleTableau-8]='A';
+    tab[tailleTableau-9]='A';
+    tab[tailleTableau-10]='A';
+    tab[tailleTableau-11]='A';
+    tab[tailleTableau-12]='A';
+    tab[tailleTableau-13]='A';
+    tab[tailleTableau-14]='A';
+    tab[tailleTableau-15]='A';
+    tab[tailleTableau-16]='2';
+    */
+    Write_Char(tab);
+    char tab2[tailleTableau+1];
+    copierTab(tab,tab2);
+    ajout1(tab2);
+    while( 1 )
+    {
+        copierTab(tab2,tab);
+        Write_Char(tab);
+        if ( !unTour(tab)){
+            printf("retenu differente de 0 donc on s'arrete puisqu'on  plus d'espace dans le tableau");
+            return 1;
+        }
+        ajout1(tab2);
+    }
+    return 0;
 
 }
