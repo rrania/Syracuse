@@ -11,7 +11,7 @@
 
 /*On crée une méthode qui va écrire dans un fichier le nombre qui vérifie la suite de Syracuse*/
 /*Il prend en méthode un nombre à écrire dans le fichier*/
-void Write(long nombre)
+void Write(unsigned long nombre)
 {
     /*On définit le fichier*/
     FILE * fp;
@@ -44,12 +44,12 @@ void Write_Char(char nombre[])
 }
 
 /*1ere méthode Syracuse 'Classique' prenant un long en argument car logn a une plage de valeurs plus grande que int*/
-int Syracuse(long n)
+int Syracuse(unsigned long n)
 {
-    long avant_dernier = 0;
-    long dernier = n;
-    long avant_avant_dernier = 0;
-    long calcul = 0;
+    unsigned long avant_dernier = 0;
+    unsigned long dernier = n;
+    unsigned long avant_avant_dernier = 0;
+    unsigned long calcul = 0;
 
     /*Tant que le nombre n'est pas 1, on continue les opérations*/
     while(avant_avant_dernier !=4 || avant_dernier!=2 || dernier !=1)
@@ -76,7 +76,7 @@ int Syracuse(long n)
 }
 
 /*2e méthode : Récurcive qui prend en argument le même long que dans la 1ere méthode*/
-int SyracuseRecurcif(long avant_avant_dernier, long avant_dernier, long dernier)
+int SyracuseRecurcif(unsigned long avant_avant_dernier, unsigned long avant_dernier, unsigned long dernier)
 {
 
     /*Si le nombre est 1 on retourne 1 ça vérifie Syracuse*/
@@ -233,25 +233,27 @@ void copierTab(char tab[] , char tabCopie[]){
 int main()
 {
     //Partie 1
+    //exemple1
     printf("Partie 1 : en cours\n");
-    long i=1;
-
-    //On a pris la valeur du plus grand long puis -1 et /3 : on a testé mais pour tester les 2 boucles, on prend une valeur du
-    //nombre max plus petit
-  /*  while(i<3074457345618258602)
-    {
-        Write(i);
-        SyracuseRecurcif(0,0,i);
-        i++;
-    }
-*/
-
+    unsigned long i=1;
     while(i<30)
     {
         Write(i);
         SyracuseRecurcif(0,0,i);
         i++;
     }
+  /*
+  //exemple 2
+     //On a pris la valeur du plus grand long puis -1 et /3 : on a testé mais pour tester les 2 boucles, on prend une valeur du
+    //nombre max plus petit
+    unsigned long i=1;
+    while(i<3074457345618258602)
+    {
+        Write(i);
+        SyracuseRecurcif(0,0,i);
+        i++;
+    }
+*/
     printf("Partie 1 : finie\n");
     //Partie 2
     printf("Partie 2 : en cours\n");
